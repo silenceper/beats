@@ -31,7 +31,7 @@ type ctx struct {
 	isoWeek, isoYear int
 
 	hour, min, sec int
-	millis         int
+	nano         int
 
 	buf []byte
 }
@@ -41,7 +41,7 @@ type ctxConfig struct {
 	clock   bool
 	weekday bool
 	yearday bool
-	millis  bool
+	nano  bool
 	iso     bool
 }
 
@@ -56,8 +56,8 @@ func (c *ctx) initTime(config *ctxConfig, t time.Time) {
 		c.isoYear, c.isoWeek = t.ISOWeek()
 	}
 
-	if config.millis {
-		c.millis = t.Nanosecond() / 1000000
+	if config.nano {
+		c.nano = t.Nanosecond()
 	}
 
 	if config.yearday {
@@ -77,8 +77,8 @@ func (c *ctxConfig) enableClock() {
 	c.clock = true
 }
 
-func (c *ctxConfig) enableMillis() {
-	c.millis = true
+func (c *ctxConfig) enableNano() {
+	c.nano = true
 }
 
 func (c *ctxConfig) enableWeekday() {

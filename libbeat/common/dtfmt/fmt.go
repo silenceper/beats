@@ -135,6 +135,7 @@ func (f *Formatter) Format(t time.Time) (string, error) {
 }
 
 func parsePatternTo(b *builder, pattern string) error {
+	// pattern: yyyy-MM-dd'T'HH:mm:ss.fffffffff'Z'
 	for i := 0; i < len(pattern); {
 		tok, tokText, err := parseToken(pattern, &i)
 		if err != nil {
@@ -209,7 +210,17 @@ func parsePatternTo(b *builder, pattern string) error {
 			b.secondOfMinute(tokLen)
 
 		case 'S': // fraction of second
-			b.millisOfSecond(tokLen)
+			b.nanoOfSecond(tokLen)
+
+		case 'z': // timezone offset
+			b.timeZoneOffsetText()
+
+		case 'n': // nano second
+			// if timestamp layout use `n`, it always return 9 digits nanoseconds.
+			if tokLen != 9 {
+				tokLen = 9
+			}
+			b.nanoOfSecond(tokLen)
 
 		case '\'': // literal
 			if tokLen == 1 {

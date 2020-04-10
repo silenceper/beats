@@ -141,7 +141,7 @@ func (p *Reader) parseDockerJSONLog(message *reader.Message, msg *logLine) error
 	}
 
 	// Parse timestamp
-	ts, err := time.Parse(time.RFC3339, msg.Time)
+	ts, err := time.Parse(time.RFC3339Nano, msg.Time)
 	if err != nil {
 		return errors.Wrap(err, "parsing docker timestamp")
 	}
